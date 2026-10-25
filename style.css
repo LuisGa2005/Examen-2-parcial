@@ -1,0 +1,39 @@
+//Coloresdefondo
+body {
+  min-height: 100vh;
+  background-color: #06c0f8;
+}
+
+.rounded-img {
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.5s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 1 8px 16px rgba(136, 255, 0, 0.945);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 3;
+}
+
+.card-footer {
+  margin-top: auto;
+}

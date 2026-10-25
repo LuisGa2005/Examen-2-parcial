@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="has-text-Yellow-dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=2.0">
+  <title>Colección Multiverso | SPA Personajes Favoritos</title>
+  <!-- Bulma CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HERO HEADER -->
+  <section class="hero is-primary is-bold mb-5">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title is-2">
+          <i class="fas fa-gamepad mr-2"></i> Colección de personajes chidos
+        </h1>
+        <p class="subtitle is-6">
+          Personajes favoritos de LuisGa :3
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="section py-2">
+    <div class="container">
+      
+      <!-- BARRA DE HERRAMIENTAS Y BÚSQUEDA -->
+      <div class="box mb-5">
+        <div class="columns is-vcentered">
+          <div class="column is-7">
+            <div class="field has-addons">
+              <div class="control has-icons-left is-expanded">
+                <input id="search-input" class="input" type="text" placeholder="Buscar por nombre, rol u origen (ej. Tracer, Sam, Daño)...">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-search"></i>
+                </span>
+              </div>
+              <div class="control">
+                <button id="btn-clear-search" class="button is-yellow" type="button">
+                  <i class="fas fa-times"></i> Limpiar
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="column is-6 is-flex is-justify-content-space-between is-align-items-center">
+            <span id="search-count" class="tag is-info is-medium">Cargando...</span>
+            <button id="btn-open-create-modal" class="button is-success font-weight-bold">
+              <i class="fas fa-plus mr-2"></i> Agregar Personaje
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESTADO VACÍO O SIN RESULTADOS (CA-03, CA-08) -->
+      <div id="empty-state" class="notification is-warning is-light text-center is-hidden py-6">
+        <p class="title is-4 mb-2" id="empty-title">Sin Personajes</p>
+        <p class="subtitle is-6" id="empty-msg">No hay registros guardados en tu colección.</p>
+        <button id="btn-reset-data" class="button is-primary mt-3">
+        <i class="fas fa-download mr-2"></i> Cargar Personajes de Ejemplo
+        </button>
+      </div>
+
+      <!-- CUADRÍCULA DE PERSONAJES (RF-01, CA-01) -->
+      <div id="characters-grid" class="columns is-multiline">
+        <!-- Renderizado dinámico desde app.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL DE DETALLE (RF-02, CA-04) -->
+  <div id="modal-detail" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p id="detail-title" class="modal-card-title">Detalle del Personaje</p>
+        <button class="delete btn-close-modal" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="columns">
+          <div class="column is-5 text-center">
+            <figure class="image is-4by5">
+              <img id="detail-img" src="" alt="Imagen de personaje" class="rounded-img" onerror="this.src='https://via.placeholder.com/300x375?text=Sin+Imagen';">
+            </figure>
+          </div>
+          <div class="column is-7">
+            <span id="detail-role" class="tag is-primary mb-2">Rol</span>
+            <h3 id="detail-name" class="title is-3 mb-1">Nombre</h3>
+            <p class="is-size-7 has-text-grey mb-3"><i class="fas fa-map-marker-alt"></i> <span id="detail-origin">Origen</span></p>
+            <p id="detail-desc" class="has-text-grey-dark mb-4">Descripción del personaje...</p>
+            <p class="is-size-7 has-text-grey"><i class="fas fa-calendar-alt"></i> Registrado: <span id="detail-date">--</span></p>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot is-justify-content-flex-end">
+        <button class="button is-info btn-close-modal">Cerrar</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- MODAL DE FORMULARIO CREAR / EDITAR (RF-03, RF-06, CA-05, CA-06, CA-09) -->
+  <div id="modal-form" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p id="form-modal-title" class="modal-card-title">Agregar Personaje</p>
+        <button class="delete btn-close-modal" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <form id="character-form" novalidate>
+          <input type="hidden" id="form-id">
+          
+          <div class="field">
+            <label class="label">Nombre *</label>
+            <div class="control">
+              <input id="form-name" class="input" type="text" placeholder="Ej. Tracer, Sam Porter Bridges, Iron Man" required>
+            </div>
+            <p id="err-name" class="help is-danger is-hidden">El nombre es obligatorio y no debe constar solo de espacios.</p>
+          </div>
+
+          <div class="columns">
+            <div class="column is-6">
+              <div class="field">
+                <label class="label">Rol / Clase *</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select id="form-role" required>
+                      <option value="">Seleccionar rol...</option>
+                      <option value="Daño">Daño </option>
+                      <option value="Tanque">Tanque</option>
+                      <option value="Apoyo">Apoyo </option>
+                      <option value="Repartidor">Repartidor </option>
+                      <option value="Original">Creación Propia</option>
+                    </select>
+                  </div>
+                </div>
+                <p id="err-role" class="help is-danger is-hidden">Selecciona un rol válido.</p>
+              </div>
+            </div>
+            <div class="column is-6">
+              <div class="field">
+                <label class="label">Origen / Universo *</label>
+                <div class="control">
+                  <input id="form-origin" class="input" type="text" placeholder="Ej. Overwatch, Death Stranding, Marvel Rivals" required>
+                </div>
+                <p id="err-origin" class="help is-danger is-hidden">El origen es obligatorio.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">URL de la Imagen</label>
+            <div class="control">
+              <input id="form-image" class="input" type="url" placeholder="https://ejemplo.com/imagen.png">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Descripción / Lore *</label>
+            <div class="control">
+              <textarea id="form-desc" class="textarea" rows="3" placeholder="Resumen del personaje..." required></textarea>
+            </div>
+            <p id="err-desc" class="help is-danger is-hidden">La descripción es obligatoria.</p>
+          </div>
+
+        </form>
+      </section>
+      <footer class="modal-card-foot is-justify-content-space-between">
+        <button class="button btn-close-modal">Cancelar</button>
+        <button id="btn-save-character" class="button is-success">
+          <i class="fas fa-save mr-2"></i> Guardar Personaje
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <script src="personajes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
